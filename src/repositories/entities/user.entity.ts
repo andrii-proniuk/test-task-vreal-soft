@@ -12,10 +12,18 @@ export enum UserRolesEnum {
   admin = 'admin',
 }
 
+export enum UserSortEnum {
+  id = 'id',
+  name = 'name',
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  name: string;
 
   @Column()
   username: string;

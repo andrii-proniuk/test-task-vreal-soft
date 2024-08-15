@@ -9,6 +9,7 @@ import { DatabaseConfig } from './config/configuration.types';
 import { User } from './repositories/entities/user.entity';
 import { PostsModule } from './posts/posts.module';
 import { Post } from './repositories/entities/post.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { Post } from './repositories/entities/post.entity';
     }),
     AuthModule,
     PostsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

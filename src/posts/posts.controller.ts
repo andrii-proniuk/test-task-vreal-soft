@@ -19,7 +19,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PostExistsGuard } from './guards/post-exists.guard';
-import { CanChangePostGuard } from './guards/can-change-post.guard';
+import { CanModifyPostGuard } from './guards/can-modify-post.guard';
 import { GetPostsDto } from './dto/get-posts.dto';
 
 @Controller('posts')
@@ -51,7 +51,7 @@ export class PostsController {
   }
 
   @Patch(':id')
-  @UseGuards(PostExistsGuard, CanChangePostGuard)
+  @UseGuards(PostExistsGuard, CanModifyPostGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePostDto: UpdatePostDto,
@@ -60,7 +60,7 @@ export class PostsController {
   }
 
   @Delete(':id')
-  @UseGuards(PostExistsGuard, CanChangePostGuard)
+  @UseGuards(PostExistsGuard, CanModifyPostGuard)
   async delete(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PostResponseDto> {

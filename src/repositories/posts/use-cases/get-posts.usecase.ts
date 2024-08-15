@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Post } from '../../entities/post.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { GetPostsDto } from '../../../posts/dto/get-posts.dto';
 
 @Injectable()
@@ -15,10 +15,13 @@ export class GetPostsUseCase {
 
     return this.postsRepository.find({
       where: {
-        title: search && Like(`%${search}%`),
+        title: search && ILike(`%${search}%`),
       },
       order: {
         [sort]: direction,
+      },
+      relations: {
+        user: true,
       },
       ...getPostsDto.getPagination(),
     });

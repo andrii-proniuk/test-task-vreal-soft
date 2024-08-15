@@ -1,29 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
 import { User, UserRolesEnum } from '../../entities/user.entity';
-import { Repository } from 'typeorm';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class SeedAdminUseCase {
-  constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
-  ) {}
+  constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
   async exec(): Promise<void> {
-    const admin = await this.userRepository.findOneBy({ username: 'admin' });
+    await this.entityManager.transaction(async (transaction) => {
+      const admin = await transaction.findOneBy(User, { username: 'admin' });
 
-    if (admin) {
-      return;
-    }
+      if (admin) {
+        return;
+      }
 
-    const hashedPassword = await User.hashPassword('admin');
+      const hashedPassword = await User.hashPassword('admin');
 
-    const user = this.userRepository.create({
-      username: 'admin',
-      password: hashedPassword,
-      role: UserRolesEnum.admin,
+      const user = transaction.create(User, {
+        name: 'Admin',
+        username: 'admin',
+        password: hashedPassword,
+        role: UserRolesEnum.admin,
+      });
+
+      await transaction.save(user);
     });
-
-    await this.userRepository.save(user);
   }
 }

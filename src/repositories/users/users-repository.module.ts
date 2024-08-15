@@ -5,6 +5,9 @@ import { User } from '../entities/user.entity';
 import { CreateUserUseCase } from './use-cases/create-user.usecase';
 import { GetUserUseCase } from './use-cases/get-user.usecase';
 import { SeedAdminUseCase } from './use-cases/seed-admin.usecase';
+import { GetUsersUseCase } from './use-cases/get-users.usecase';
+import { UpdateUserUseCase } from './use-cases/update-user.usecase';
+import { DeleteUserUseCase } from './use-cases/delete-user.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
@@ -13,6 +16,9 @@ import { SeedAdminUseCase } from './use-cases/seed-admin.usecase';
     CreateUserUseCase,
     GetUserUseCase,
     SeedAdminUseCase,
+    GetUsersUseCase,
+    UpdateUserUseCase,
+    DeleteUserUseCase,
   ],
   exports: [UsersRepositoryService],
 })

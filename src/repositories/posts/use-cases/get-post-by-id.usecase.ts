@@ -10,6 +10,9 @@ export class GetPostByIdUseCase {
   ) {}
 
   async exec(id: number): Promise<Post> {
-    return this.postsRepository.findOne({ where: { id } });
+    return this.postsRepository.findOne({
+      where: { id },
+      relations: { user: true },
+    });
   }
 }

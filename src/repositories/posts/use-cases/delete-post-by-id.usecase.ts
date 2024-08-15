@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { Post } from '../../entities/post.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
 
 @Injectable()
 export class DeletePostUseCase {
-  constructor(
-    @InjectRepository(Post) private postsRepository: Repository<Post>,
-  ) {}
+  constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
   async exec(id: number): Promise<Post> {
-    const post = await this.postsRepository.findOneBy({ id });
+    return this.entityManager.transaction(async (transaction) => {
+      const post = await transaction.findOne(Post, {
+        where: { id },
+        relations: { user: true },
+      });
 
-    await this.postsRepository.delete({ id });
+      await transaction.delete(Post, { id });
 
-    return post;
+      return post;
+    });
   }
 }

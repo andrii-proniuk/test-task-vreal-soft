@@ -1,18 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { Post } from '../../entities/post.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InjectEntityManager } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
 import { UpdatePostDto } from '../../../posts/dto/update-post.dto';
 
 @Injectable()
 export class UpdatePostUseCase {
-  constructor(
-    @InjectRepository(Post) private postsRepository: Repository<Post>,
-  ) {}
+  constructor(@InjectEntityManager() private entityManager: EntityManager) {}
 
   async exec(id: number, updatePostDto: UpdatePostDto): Promise<Post> {
-    await this.postsRepository.update({ id }, updatePostDto);
+    return this.entityManager.transaction(async (transaction) => {
+      await transaction.update(Post, { id }, updatePostDto);
 
-    return this.postsRepository.findOneBy({ id });
+      return transaction.findOne(Post, {
+        where: { id },
+        relations: { user: true },
+      });
+    });
   }
 }
