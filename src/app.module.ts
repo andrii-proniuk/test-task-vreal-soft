@@ -18,11 +18,13 @@ import { Post } from './repositories/entities/post.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const { username, password, database } =
+        const { host, port, username, password, database } =
           configService.get<DatabaseConfig>('database');
 
         return {
           type: 'postgres',
+          host,
+          port,
           username,
           password,
           database,
