@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { EmailAvailableGuard } from './guards/email-available.guard';
+import { UsernameAvailableGuard } from './guards/username-available.guard';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignUpResponseDto } from './response-dto/sign-up.response-dto';
-import { ValidCredentialsGuard } from './guards/user-exists.guard';
+import { ValidCredentialsGuard } from './guards/valid-credentials.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../repositories/entities/user.entity';
 import { LoginResponseDto } from './response-dto/login.response-dto';
@@ -17,7 +17,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('sign-up')
-  @UseGuards(EmailAvailableGuard)
+  @UseGuards(UsernameAvailableGuard)
   async signUp(@Body() signUpDto: SignUpDto): Promise<SignUpResponseDto> {
     return this.authService.signUp(signUpDto);
   }

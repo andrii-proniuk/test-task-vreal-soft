@@ -8,6 +8,13 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
+export enum PostSortEnum {
+  id = 'id',
+  title = 'title',
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+}
+
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()

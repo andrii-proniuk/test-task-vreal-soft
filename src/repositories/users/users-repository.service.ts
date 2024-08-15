@@ -3,12 +3,14 @@ import { CreateUserUseCase } from './use-cases/create-user.usecase';
 import { GetUserUseCase } from './use-cases/get-user.usecase';
 import { SignUpDto } from '../../auth/dto/sign-up.dto';
 import { User } from '../entities/user.entity';
+import { SeedAdminUseCase } from './use-cases/seed-admin.usecase';
 
 @Injectable()
 export class UsersRepositoryService {
   constructor(
     private createUserUseCase: CreateUserUseCase,
     private getUserUseCase: GetUserUseCase,
+    private seedAdminUseCase: SeedAdminUseCase,
   ) {}
 
   async create(signUpDto: SignUpDto): Promise<User> {
@@ -19,7 +21,11 @@ export class UsersRepositoryService {
     return this.getUserUseCase.exec({ id });
   }
 
-  async getByEmail(email: string): Promise<User> {
-    return this.getUserUseCase.exec({ email });
+  async getByUsername(username: string): Promise<User> {
+    return this.getUserUseCase.exec({ username });
+  }
+
+  async seedAdmin(): Promise<void> {
+    return this.seedAdminUseCase.exec();
   }
 }

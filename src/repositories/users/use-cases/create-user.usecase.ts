@@ -10,11 +10,11 @@ export class CreateUserUseCase {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async exec({ email, password }: SignUpDto): Promise<User> {
+  async exec({ username, password }: SignUpDto): Promise<User> {
     const hashedPassword = await User.hashPassword(password);
 
     const user = this.userRepository.create({
-      email,
+      username,
       password: hashedPassword,
     });
 

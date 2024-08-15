@@ -7,16 +7,24 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
+export enum UserRolesEnum {
+  user = 'user',
+  admin = 'admin',
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  email: string;
+  username: string;
 
   @Column()
   password: string;
+
+  @Column({ default: UserRolesEnum.user })
+  role: UserRolesEnum;
 
   @CreateDateColumn({
     update: false,

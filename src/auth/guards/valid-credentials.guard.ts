@@ -12,15 +12,18 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class ValidCredentialsGuard implements CanActivate {
-  private validationClass: MappedType<Pick<LoginDto, 'email' | 'password'>>;
+  private validationClass: MappedType<Pick<LoginDto, 'username' | 'password'>>;
 
   constructor(private authService: AuthService) {
-    this.validationClass = PickType(LoginDto, ['email', 'password'] as const);
+    this.validationClass = PickType(LoginDto, [
+      'username',
+      'password',
+    ] as const);
   }
 
-  private async validate(email: any, password: any): Promise<void> {
+  private async validate(username: any, password: any): Promise<void> {
     const validationObj = new this.validationClass();
-    validationObj.email = email;
+    validationObj.username = username;
     validationObj.password = password;
 
     const errors = await validate(validationObj);
@@ -33,11 +36,11 @@ export class ValidCredentialsGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<InnerRequest>();
 
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    await this.validate(email, password);
+    await this.validate(username, password);
 
-    const user = await this.authService.validateUser(email, password);
+    const user = await this.authService.validateUser(username, password);
 
     req.user = user;
 

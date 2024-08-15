@@ -11,16 +11,16 @@ import { SignUpDto } from '../dto/sign-up.dto';
 import { validate } from 'class-validator';
 
 @Injectable()
-export class EmailAvailableGuard implements CanActivate {
-  private validationClass: MappedType<Pick<SignUpDto, 'email'>>;
+export class UsernameAvailableGuard implements CanActivate {
+  private validationClass: MappedType<Pick<SignUpDto, 'username'>>;
 
   constructor(private usersRepositoryService: UsersRepositoryService) {
-    this.validationClass = PickType(SignUpDto, ['email'] as const);
+    this.validationClass = PickType(SignUpDto, ['username'] as const);
   }
 
-  private async validate(email: any): Promise<void> {
+  private async validate(username: any): Promise<void> {
     const validationObj = new this.validationClass();
-    validationObj.email = email;
+    validationObj.username = username;
 
     const errors = await validate(validationObj);
 
@@ -32,15 +32,15 @@ export class EmailAvailableGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<InnerRequest>();
 
-    const { email } = req.body;
+    const { username } = req.body;
 
-    await this.validate(email);
+    await this.validate(username);
 
-    const user = await this.usersRepositoryService.getByEmail(email);
+    const user = await this.usersRepositoryService.getByUsername(username);
 
     if (user) {
       throw new BadRequestException({
-        message: 'user with provided email already exists',
+        message: 'user with provided username already exists',
       });
     }
 

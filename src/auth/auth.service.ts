@@ -22,12 +22,14 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.usersRepositoryService.getByEmail(email);
+  async validateUser(username: string, password: string): Promise<User> {
+    const user = await this.usersRepositoryService.getByUsername(username);
+
+    console.log({ foundUser: user });
 
     if (!user) {
       throw new BadRequestException({
-        message: 'email and/or password invalid',
+        message: 'username and/or password invalid',
       });
     }
 
@@ -35,7 +37,7 @@ export class AuthService {
 
     if (!isPasswordValid) {
       throw new BadRequestException({
-        message: 'email and/or password invalid',
+        message: 'username and/or password invalid',
       });
     }
 
