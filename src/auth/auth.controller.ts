@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UsernameAvailableGuard } from './guards/username-available.guard';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -7,9 +7,8 @@ import { ValidCredentialsGuard } from './guards/valid-credentials.guard';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../repositories/entities/user.entity';
 import { LoginResponseDto } from './response-dto/login.response-dto';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -27,12 +26,5 @@ export class AuthController {
   @UseGuards(ValidCredentialsGuard)
   async login(@GetUser() user: User): Promise<LoginResponseDto> {
     return this.authService.login(user);
-  }
-
-  @Get('test')
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
-  async testAuth(@GetUser() user: User): Promise<any> {
-    return user;
   }
 }
