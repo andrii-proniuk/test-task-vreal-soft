@@ -25,8 +25,6 @@ export class AuthService {
   async validateUser(username: string, password: string): Promise<User> {
     const user = await this.usersRepositoryService.getByUsername(username);
 
-    console.log({ foundUser: user });
-
     if (!user) {
       throw new BadRequestException({
         message: 'username and/or password invalid',
